@@ -27,7 +27,7 @@ As in the thesis, leakage and threshold are only ever *added*, so you write them
 | `uio[4]` | in | WR: a rising edge writes DATA to ADDR (synchronised to `clk`, so any strobe speed works) |
 | `uio[6]` | out | spike result of the last updateLIF |
 | `uio[7]` | out | spike vector full |
-| `uo[7:0]` | out | read-back byte for ADDR (combinational) |
+| `uo[7:0]` | out | read-back byte for ADDR (registered: valid 1 clock after ADDR changes) |
 
 Hold DATA/ADDR stable while WR is high. Keep WR high for at least 3 clock cycles and low for at least 3 cycles before the next write.
 

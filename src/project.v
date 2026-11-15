@@ -12,7 +12,7 @@
  *   uio[5]      : unused input
  *   uio[6]      : last spike (output, result of the last updateLIF)
  *   uio[7]      : spike_vector_full (output)
- *   uo_out[7:0] : read-back byte selected by ADDR
+ *   uo_out[7:0] : read-back byte selected by ADDR (registered, 1 clk latency)
  *
  * Write map:
  *   0x0/0x1 LEAK  lo/hi   (store -leak)
@@ -163,7 +163,15 @@ module tt_um_strider93_lif (
     endcase
   end
 
-  assign uo_out  = rdata;
+  // register the read-back byte: keeps the adder chain (spike_now) and the
+  // ADDR->uo_out mux out of the pin-to-pin timing paths
+  reg [7:0] rdata_q;
+  always @(posedge clk or negedge rst_n) begin
+    if (!rst_n) rdata_q <= 8'd0;
+    else rdata_q <= rdata;
+  end
+
+  assign uo_out  = rdata_q;
   assign uio_out = {spike_vector_full, last_spike_r, 6'b0};
   assign uio_oe  = 8'b1100_0000;
 

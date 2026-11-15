@@ -130,7 +130,7 @@ class Driver:
 
     async def read(self, addr):
         self.dut.uio_in.value = addr
-        await ClockCycles(self.dut.clk, 1)
+        await ClockCycles(self.dut.clk, 2)  # uo_out is registered
         return int(self.dut.uo_out.value)
 
     async def write16(self, addr_lo, value):
